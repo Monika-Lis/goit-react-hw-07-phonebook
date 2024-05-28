@@ -1,0 +1,25 @@
+.table {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.trBody {
+  height: 30px;
+}
+
+.tdButton {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  margin-left: 10px;
+  font-size: 10px;
+  background-color: white;
+  border: none;
+  border-radius: 10px;
+}

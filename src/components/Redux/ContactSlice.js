@@ -1,24 +1,91 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+import Notiflix from 'notiflix';
+import { setFilter } from './FilterSlice';
 
-const initialState = [
-  { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-  { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-  { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-  { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-];
+axios.defaults.baseURL = 'https://665631e39f970b3b36c499c8.mockapi.io';
+
+const initialState = {
+  contacts: [],
+  filter: '',
+  isLoading: false,
+  error: null,
+};
+
+export const fetchContacts = createAsyncThunk(
+  'contacts/FetchContacts',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get('/contacts');
+      return response.data;
+    } catch (error) {
+      Notiflix.Notify.failure('Failure to fetch contacts');
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const addContact = createAsyncThunk(
+  'contacts/addContact',
+  async ({ name, phone }, { rejectWithValue }) => {
+    try {
+      const resposne = await axios.post('/contacts', { name, phone });
+      return resposne.data;
+    } catch (error) {
+      Notiflix.Notify.failure('Failure to add contact');
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteContact = createAsyncThunk(
+  'contacts/deleteContact',
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(`/contacts/${id}`);
+      return id;
+    } catch (error) {
+      Notiflix.Notify.failure('Failure to delete contact');
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+const handleLoading = state => {
+  state.isLoading = true;
+};
+
+const handleFailure = (state, action) => {
+  state.isLoading = false;
+  state.error = action.payload;
+};
 
 const contactsSlice = createSlice({
   name: 'contacts',
   initialState,
-  reducers: {
-    addContact: (state, action) => {
-      state.push(action.payload);
-    },
-    deleteContact: (state, action) => {
-      return state.filter(contact => contact.id !== action.payload);
-    },
+  reducers: {},
+  extraReducers: builder => {
+    builder
+      .addCase(fetchContacts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.contacts = action.payload;
+      })
+      .addCase(addContact.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.contacts.push(action.payload);
+      })
+      .addCase(deleteContact.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.contacts = state.contacts.filter(
+          contact => contact.id !== action.payload
+        );
+      })
+      .addMatcher(action => action.type.endsWith('/pending)'), handleLoading)
+      .addMatcher(action => action.type.endsWith('/rejected'), handleFailure);
   },
 });
 
-export const { addContact, deleteContact } = contactsSlice.actions;
 export default contactsSlice.reducer;

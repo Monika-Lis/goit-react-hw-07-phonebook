@@ -3,13 +3,12 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Notiflix from 'notiflix';
-import { nanoid } from 'nanoid';
 import { addContact } from 'components/Redux/ContactSlice';
 
 export const Input = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  const contacts = useSelector(state => state.contacts);
+  const contacts = useSelector(state => state.contacts.contacts);
   const dispatch = useDispatch();
 
   const handleAddName = event => {
@@ -22,7 +21,6 @@ export const Input = () => {
   const handleSubmit = event => {
     event.preventDefault();
 
-    console.log(contacts);
     const isPresent = contacts.some(
       contact => contact.name.toLowerCase() === name.trim().toLowerCase()
     );
@@ -31,7 +29,7 @@ export const Input = () => {
       Notiflix.Notify.warning('This contact already exists!');
       return;
     }
-    dispatch(addContact({ id: nanoid(), name, number }));
+    dispatch(addContact({ name, phone: number }));
     setName('');
     setNumber('');
   };

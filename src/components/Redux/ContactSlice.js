@@ -1,9 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import Notiflix from 'notiflix';
-import { setFilter } from './FilterSlice';
-
-axios.defaults.baseURL = 'https://665631e39f970b3b36c499c8.mockapi.io';
+import { createSlice } from '@reduxjs/toolkit';
+import { fetchContacts, addContact, deleteContact } from './OperationsAPI';
 
 const initialState = {
   contacts: [],
@@ -11,45 +7,6 @@ const initialState = {
   isLoading: false,
   error: null,
 };
-
-export const fetchContacts = createAsyncThunk(
-  'contacts/FetchContacts',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await axios.get('/contacts');
-      return response.data;
-    } catch (error) {
-      Notiflix.Notify.failure('Failure to fetch contacts');
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const addContact = createAsyncThunk(
-  'contacts/addContact',
-  async ({ name, phone }, { rejectWithValue }) => {
-    try {
-      const resposne = await axios.post('/contacts', { name, phone });
-      return resposne.data;
-    } catch (error) {
-      Notiflix.Notify.failure('Failure to add contact');
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const deleteContact = createAsyncThunk(
-  'contacts/deleteContact',
-  async (id, { rejectWithValue }) => {
-    try {
-      const response = await axios.delete(`/contacts/${id}`);
-      return id;
-    } catch (error) {
-      Notiflix.Notify.failure('Failure to delete contact');
-      return rejectWithValue(error.message);
-    }
-  }
-);
 
 const handleLoading = state => {
   state.isLoading = true;

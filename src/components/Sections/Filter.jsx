@@ -4,7 +4,7 @@ import css from '../Styles/Filter.module.css';
 import PropTypes from 'prop-types';
 
 export const Filter = () => {
-  const filter = useSelector(state => state.contacts.filter);
+  const filter = useSelector(state => state.filter);
   const dispatch = useDispatch();
 
   const handleFilterChange = event => {

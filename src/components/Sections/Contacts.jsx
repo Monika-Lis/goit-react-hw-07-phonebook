@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchContacts, deleteContact } from 'components/Redux/ContactSlice';
+import { fetchContacts, deleteContact } from '../Redux/OperationsAPI';
 import css from '../Styles/Contacts.module.css';
 import PropTypes from 'prop-types';
 
@@ -9,13 +9,12 @@ export const Contacts = () => {
   const filter = useSelector(state => state.filter);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
-
   const filteredContacts = contacts.filter(contact =>
     contact.name?.toLowerCase().includes(filter.toLowerCase())
   );
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <div>

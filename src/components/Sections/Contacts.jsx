@@ -28,7 +28,7 @@ export const Contacts = () => {
           {filteredContacts.map(contact => (
             <tr className={css.trBody} key={contact.id}>
               <td>{contact.name}: </td>
-              <td>{contact.number}</td>
+              <td>{contact.phone}</td>
               <td className={css.tdButton}>
                 <button
                   className={css.button}

@@ -8,15 +8,15 @@ import { nanoid } from 'nanoid';
 
 export const Input = () => {
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setPhone] = useState('');
   const contacts = useSelector(state => state.contacts.contacts);
   const dispatch = useDispatch();
 
   const handleAddName = event => {
     setName(event.target.value);
   };
-  const handleAddNumber = event => {
-    setNumber(event.target.value);
+  const handleAddPhone = event => {
+    setPhone(event.target.value);
   };
 
   const handleSubmit = event => {
@@ -30,9 +30,9 @@ export const Input = () => {
       Notiflix.Notify.warning('This contact already exists!');
       return;
     }
-    dispatch(addContact({ id: nanoid(), name, number }));
+    dispatch(addContact({ id: nanoid(), name, phone }));
     setName('');
-    setNumber('');
+    setPhone('');
   };
 
   return (
@@ -59,8 +59,8 @@ export const Input = () => {
           id="phoneField"
           type="tel"
           name="number"
-          value={number}
-          onChange={handleAddNumber}
+          value={phone}
+          onChange={handleAddPhone}
           placeholder="Phone Number"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           pattern="\+?\d{1,4}?[ .\\-\\s]?\(?\d{1,3}?\)?[ .\\-\\s]?\d{1,4}[ .\\-\\s]?\d{1,4}[ .\\-\\s]?\d{1,9}"
